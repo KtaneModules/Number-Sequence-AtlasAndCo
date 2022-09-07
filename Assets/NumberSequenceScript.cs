@@ -164,8 +164,7 @@ public class NumberSequenceScript : MonoBehaviour
                 //Sets currentLight to the correct value
                 currentLight = i + 1;
 
-                
-                yield return new WaitForSecondsRealtime(1f + (timesCycled * 0.05f));
+                yield return new WaitForSecondsRealtime(0.5f + (timesCycled * 0.065f));
 
                 if (currentLight == 4)
                 {

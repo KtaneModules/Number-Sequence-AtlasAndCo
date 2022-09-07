@@ -1,0 +1,9 @@
+Number Sequence 1.0
+Math isn't THAT daunting....well it's a different story when it's strapped to a bomb.
+
+Module ID: numberSequence
+
+Created by: AtlasAndCo
+---
+1.0 Build Notes:
+-Initial release

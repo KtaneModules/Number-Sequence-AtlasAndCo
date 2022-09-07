@@ -14,7 +14,9 @@ MonoBehaviour:
   id: numberSequence
   title: Number Sequence
   author: AtlasAndCo
-  description: 
+  description: "Number Sequence 1.0\nMath isn't THAT daunting....well it's a different
+    story when it's strapped to a bomb.\n\nModule ID: numberSequence\n\r\nCreated
+    by: AtlasAndCo"
   version: 1.0
   outputFolder: build
-  previewImage: {fileID: 0}
+  previewImage: {fileID: 2800000, guid: ac178d09d8cc90f44b2442be858f4c84, type: 3}
