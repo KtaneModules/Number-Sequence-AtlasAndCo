@@ -52,6 +52,12 @@ public class NumberSequenceScript : MonoBehaviour
 
     void Start()
     {
+        float scalar = transform.lossyScale.x;
+        for (var i = 0; i < lights.Length; i++)
+        {
+            lights[i].GetComponent<Light>().range *= scalar;
+        }   
+
         for (int i = 0; i < numberSequence.Length; i++)
         {
             numberSequence[i] = UnityEngine.Random.Range(10, 100);

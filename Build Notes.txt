@@ -16,3 +16,6 @@ Created by: AtlasAndCo
 
 1.3 Build Notes:
 -Tweaked the manual to improve readability (credit to GhostSalt and Luminoscity Tim)
+
+1.4 Build Notes:
+-Fixed an issue with light scaling (Thanks to eXish for pointing it out)
