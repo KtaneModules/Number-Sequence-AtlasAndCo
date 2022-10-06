@@ -52,11 +52,12 @@ public class NumberSequenceScript : MonoBehaviour
 
     void Start()
     {
-        float scalar = transform.lossyScale.x;
+        float scalar = this.transform.lossyScale.x;
         for (var i = 0; i < lights.Length; i++)
         {
-            lights[i].GetComponent<Light>().range *= scalar;
-        }   
+            lights[i].gameObject.transform.GetChild(0).gameObject.GetComponent<Light>().range *= scalar;
+        }
+        screenLight.GetComponent<Light>().range *= scalar;
 
         for (int i = 0; i < numberSequence.Length; i++)
         {
@@ -287,7 +288,7 @@ public class NumberSequenceScript : MonoBehaviour
         if (pressedButton.name == "KeySubmit")
         {
             pressedButton.AddInteractionPunch(0.75f);
-            audioRef.PlaySoundAtTransform("KeyBoard_Click2", this.transform);
+            audioRef.PlaySoundAtTransform("KeyBoard_Click2", pressedButton.transform);
 
             if (areLightsCycling)
             {
@@ -581,21 +582,25 @@ public class NumberSequenceScript : MonoBehaviour
                     case (1):
 
                         Debug.LogFormat("[Number Sequence #{0}] The currently lit light is number {1}. {2} ^ 2 = {3}, the correct number to submit is {4}", moduleId, currentLight, numberSequence[0], Mathf.Pow(numberSequence[0], 2), Mathf.Clamp(Mathf.Pow(numberSequence[0], 2), 0, 9999));
+                        autosolveStore = Mathf.Clamp(Mathf.Pow(numberSequence[0], 2), 0, 9999);
 
                         break;
                     case (2):
 
                         Debug.LogFormat("[Number Sequence #{0}] The currently lit light is number {1}. ({2} - {3}) * 2 = {4}, the correct number to submit is {5}", moduleId, currentLight, numberSequence[1], numberSequence[3], numberSequence[1] - numberSequence[3], Mathf.Clamp((numberSequence[1] - numberSequence[3]) * 2, 0, 9999));
+                        autosolveStore = Mathf.Clamp((numberSequence[1] - numberSequence[3]) * 2, 0, 9999);
 
                         break;
                     case (3):
 
                         Debug.LogFormat("[Number Sequence #{0}] The currently lit light is number {1}. 50 - {2} = {3}, the correct number to submit is {4}", moduleId, currentLight, numberSequence[2], 50 - numberSequence[2], Mathf.Clamp(50 - numberSequence[2], 0, 9999));
+                        autosolveStore = Mathf.Clamp(50 - numberSequence[2], 0, 9999);
 
                         break;
                     case (4):
 
                         Debug.LogFormat("[Number Sequence #{0}] The currently lit light is number {1}. {2} * {3} = {4}, the correct number to submit is {5}", moduleId, currentLight, numberSequence[0], numberSequence[3], numberSequence[0] * numberSequence[3], Mathf.Clamp(numberSequence[0] * numberSequence[3], 0, 9999));
+                        autosolveStore = Mathf.Clamp(numberSequence[0] * numberSequence[3], 0, 9999);
 
                         break;
                 }
@@ -606,21 +611,25 @@ public class NumberSequenceScript : MonoBehaviour
                     case (1):
 
                         Debug.LogFormat("[Number Sequence #{0}] The currently lit light is number {1}. {2} ^ 3 - {3} * 5 = {4}, the correct number to submit is {5}", moduleId, currentLight, numberSequence[2], numberSequence[0], (Mathf.Pow(numberSequence[2], 3)) - (numberSequence[0] * 5), Mathf.Clamp((Mathf.Pow(numberSequence[2], 3)) - (numberSequence[0] * 5), 0, 9999));
+                        autosolveStore = Mathf.Clamp((Mathf.Pow(numberSequence[2], 3)) - (numberSequence[0] * 5), 0, 9999);
 
                         break;
                     case (2):
 
                         Debug.LogFormat("[Number Sequence #{0}] The currently lit light is number {1}. 25 - (-{2}) = {3}, the correct number to submit is {4}", moduleId, currentLight, numberSequence[0], 25 - (-numberSequence[0]), Mathf.Clamp(25 - (-numberSequence[0]), 0, 9999));
+                        autosolveStore = Mathf.Clamp(25 - (-numberSequence[0]), 0, 9999);
 
                         break;
                     case (3):
 
                         Debug.LogFormat("[Number Sequence #{0}] The currently lit light is number {1}. The correct number to submit is {2}", moduleId, currentLight, numberSequence[1]);
+                        autosolveStore = numberSequence[1];
 
                         break;
                     case (4):
 
                         Debug.LogFormat("[Number Sequence #{0}] The currently lit light is number {1}. 100 / {2} = {3}, the correct number to submit is {4}", moduleId, currentLight, numberSequence[3], 100f / (float)numberSequence[3], Mathf.Clamp(Mathf.CeilToInt(100f / (float)numberSequence[3]), 0, 9999));
+                        autosolveStore = Mathf.Clamp(Mathf.CeilToInt(100f / (float)numberSequence[3]), 0, 9999);
 
                         break;
                 }
@@ -631,21 +640,25 @@ public class NumberSequenceScript : MonoBehaviour
                     case (1):
 
                         Debug.LogFormat("[Number Sequence #{0}] The currently lit light is number {1}. {2} + {3} / 2 = {4}, the correct number to submit is {5}", moduleId, currentLight, numberSequence[0], numberSequence[1], (float)numberSequence[0] + ((float)numberSequence[1] / 2f), Mathf.Clamp(Mathf.CeilToInt((float)numberSequence[0] + ((float)numberSequence[1] / 2f)), 0, 9999));
+                        autosolveStore = Mathf.Clamp(Mathf.CeilToInt((float)numberSequence[0] + ((float)numberSequence[1] / 2f)), 0, 9999);
 
                         break;
                     case (2):
 
                         Debug.LogFormat("[Number Sequence #{0}] The currently lit light is number {1}. {2} * 5 - {3} = {4}, the correct number to submit is {5}", moduleId, currentLight, numberSequence[3], numberSequence[2], (numberSequence[3] * 5) - numberSequence[2], Mathf.Clamp((numberSequence[3] * 5) - numberSequence[2], 0, 9999));
+                        autosolveStore = Mathf.Clamp((numberSequence[3] * 5) - numberSequence[2], 0, 9999);
 
                         break;
                     case (3):
 
                         Debug.LogFormat("[Number Sequence #{0}] The currently lit light is number {1}. 500 - {2} * 10 = {3}, the correct number to submit is {4}", moduleId, currentLight, numberSequence[2], 500 - (numberSequence[2] * 10), Mathf.Clamp(500 - (numberSequence[2] * 10), 0, 9999));
+                        autosolveStore = Mathf.Clamp(500 - (numberSequence[2] * 10), 0, 9999);
 
                         break;
                     case (4):
 
                         Debug.LogFormat("[Number Sequence #{0}] The currently lit light is number {1}. {2} / {3} + {4} * 25 = {5}, the correct number to submit is {6}", moduleId, currentLight, numberSequence[3], numberSequence[0], numberSequence[1], ((float)numberSequence[3] / (float)numberSequence[0]) + ((float)numberSequence[1] * 25f), Mathf.Clamp(Mathf.CeilToInt(((float)numberSequence[3] / (float)numberSequence[0]) + ((float)numberSequence[1] * 25f)), 0, 9999));
+                        autosolveStore = Mathf.Clamp(Mathf.CeilToInt(((float)numberSequence[3] / (float)numberSequence[0]) + ((float)numberSequence[1] * 25f)), 0, 9999);
 
                         break;
                 }
@@ -656,21 +669,25 @@ public class NumberSequenceScript : MonoBehaviour
                     case (1):
 
                         Debug.LogFormat("[Number Sequence #{0}] The currently lit light is number {1}. 9999 - {2} * {2} = {3}, the correct number to submit is {4}", moduleId, currentLight, numberSequence[3], 9999 - (numberSequence[3] * numberSequence[3]), Mathf.Clamp(9999 - (numberSequence[3] * numberSequence[3]), 0, 9999));
+                        autosolveStore = Mathf.Clamp(9999 - (numberSequence[3] * numberSequence[3]), 0, 9999);
 
                         break;
                     case (2):
 
                         Debug.LogFormat("[Number Sequence #{0}] The currently lit light is number {1}. {2} * 75 + 1000 = {3}, the correct number to submit is {4}", moduleId, currentLight, numberSequence[1], (numberSequence[1] * 75) + 1000, Mathf.Clamp((numberSequence[1] * 75) + 1000, 0, 9999));
+                        autosolveStore = Mathf.Clamp((numberSequence[1] * 75) + 1000, 0, 9999);
 
                         break;
                     case (3):
 
                         Debug.LogFormat("[Number Sequence #{0}] The currently lit light is number {1}. {2} / 99 * 3500 = {3}, the correct number to submit is {4}", moduleId, currentLight, numberSequence[2], ((float)numberSequence[2] / 99f) * 3500f, Mathf.Clamp(Mathf.CeilToInt(((float)numberSequence[2] / 99f) * 3500f), 0, 9999));
+                        autosolveStore = Mathf.Clamp(Mathf.CeilToInt(((float)numberSequence[2] / 99f) * 3500f), 0, 9999);
 
                         break;
                     case (4):
 
                         Debug.LogFormat("[Number Sequence #{0}] The currently lit light is number {1}. 1 / {2} * {3} ^ 2 = {4}, the correct number to submit is {5}", moduleId, currentLight, numberSequence[3], numberSequence[0], (1f / (float)numberSequence[3]) * (Mathf.Pow((float)numberSequence[0], 2f)), Mathf.Clamp(Mathf.CeilToInt((1f / (float)numberSequence[3]) * (Mathf.Pow((float)numberSequence[0], 2f))), 0, 9999));
+                        autosolveStore = Mathf.Clamp(Mathf.CeilToInt((1f / (float)numberSequence[3]) * (Mathf.Pow((float)numberSequence[0], 2f))), 0, 9999);
 
                         break;
                 }
@@ -681,21 +698,25 @@ public class NumberSequenceScript : MonoBehaviour
                     case (1):
 
                         Debug.LogFormat("[Number Sequence #{0}] The currently lit light is number {1}. {2} * {3} * {4} = {5}, the correct number to submit is {6}", moduleId, currentLight, numberSequence[0], numberSequence[2], numberSequence[3], numberSequence[0] * numberSequence[2] * numberSequence[3], Mathf.Clamp(numberSequence[0] * numberSequence[2] * numberSequence[3], 0, 9999));
+                        autosolveStore = Mathf.Clamp(numberSequence[0] * numberSequence[2] * numberSequence[3], 0, 9999);
 
                         break;
                     case (2):
 
                         Debug.LogFormat("[Number Sequence #{0}] The currently lit light is number {1}. {2} - (-{3}) / 35 = {4}, the correct number to submit is {5}", moduleId, currentLight, numberSequence[1], numberSequence[0], (float)numberSequence[1] - ((-(float)numberSequence[0]) / 35f), Mathf.Clamp(Mathf.CeilToInt((float)numberSequence[1] - ((-(float)numberSequence[0]) / 35f)), 0, 9999));
+                        autosolveStore = Mathf.Clamp(Mathf.CeilToInt((float)numberSequence[1] - ((-(float)numberSequence[0]) / 35f)), 0, 9999);
 
                         break;
                     case (3):
 
                         Debug.LogFormat("[Number Sequence #{0}] The currently lit light is number {1}. 8500 - {2} * 100 = {3}, the correct number to submit is {4}", moduleId, currentLight, numberSequence[2], 8500 - (numberSequence[2] * 100), Mathf.Clamp(8500 - (numberSequence[2] * 100), 0, 9999));
+                        autosolveStore = Mathf.Clamp(8500 - (numberSequence[2] * 100), 0, 9999);
 
                         break;
                     case (4):
 
                         Debug.LogFormat("[Number Sequence #{0}] The currently lit light is number {1}. {2} / {3} = {4}, the correct number to submit is {5}", moduleId, currentLight, numberSequence[3], numberSequence[0], (float)numberSequence[3] / (float)numberSequence[0], Mathf.Clamp(Mathf.CeilToInt((float)numberSequence[3] / (float)numberSequence[0]), 0, 9999));
+                        autosolveStore = Mathf.Clamp(Mathf.CeilToInt((float)numberSequence[3] / (float)numberSequence[0]), 0, 9999);
 
                         break;
                 }
@@ -706,21 +727,25 @@ public class NumberSequenceScript : MonoBehaviour
                     case (1):
 
                         Debug.LogFormat("[Number Sequence #{0}] The currently lit light is number {1}. {2} * {3} + 6000 = {4}, the correct number to submit is {5}", moduleId, currentLight, numberSequence[0], numberSequence[3], (numberSequence[0] * numberSequence[3]) + 6000, Mathf.Clamp((numberSequence[0] * numberSequence[3]) + 6000, 0, 9999));
+                        autosolveStore = Mathf.Clamp((numberSequence[0] * numberSequence[3]) + 6000, 0, 9999);
 
                         break;
                     case (2):
 
                         Debug.LogFormat("[Number Sequence #{0}] The currently lit light is number {1}. {2} / 80 * {3} ^ 2 = {4}, the correct number to submit is {5}", moduleId, currentLight, numberSequence[1], numberSequence[2], ((float)numberSequence[1] / 80f) * (Mathf.Pow((float)numberSequence[2], 2)), Mathf.Clamp(Mathf.CeilToInt(((float)numberSequence[1] / 80f) * (Mathf.Pow((float)numberSequence[2], 2))), 0, 9999));
+                        autosolveStore = Mathf.Clamp(Mathf.CeilToInt(((float)numberSequence[1] / 80f) * (Mathf.Pow((float)numberSequence[2], 2))), 0, 9999);
 
                         break;
                     case (3):
 
                         Debug.LogFormat("[Number Sequence #{0}] The currently lit light is number {1}. {2} + {3} + {4} + {5} = {6}, the correct number to submit is {7}", moduleId, currentLight, numberSequence[0], numberSequence[1], numberSequence[2], numberSequence[3], numberSequence[0] + numberSequence[1] + numberSequence[2] + numberSequence[3], Mathf.Clamp(numberSequence[0] + numberSequence[1] + numberSequence[2] + numberSequence[3], 0, 9999));
+                        autosolveStore = Mathf.Clamp(numberSequence[0] + numberSequence[1] + numberSequence[2] + numberSequence[3], 0, 9999);
 
                         break;
                     case (4):
 
                         Debug.LogFormat("[Number Sequence #{0}] The currently lit light is number {1}. 350 * {2} / ({3} + {4}) = {5}, the correct number to submit is {6}", moduleId, currentLight, numberSequence[3], numberSequence[0], numberSequence[1], (350f * (float)numberSequence[3]) / ((float)numberSequence[0] + (float)numberSequence[1]), Mathf.Clamp(Mathf.CeilToInt((350f * (float)numberSequence[3]) / ((float)numberSequence[0] + (float)numberSequence[1])), 0, 9999));
+                        autosolveStore = Mathf.Clamp(Mathf.CeilToInt((350f * (float)numberSequence[3]) / ((float)numberSequence[0] + (float)numberSequence[1])), 0, 9999);
 
                         break;
                 }
@@ -731,25 +756,147 @@ public class NumberSequenceScript : MonoBehaviour
                     case (1):
 
                         Debug.LogFormat("[Number Sequence #{0}] The currently lit light is number {1}. {2} * {3} + 1250 = {4}, the correct number to submit is {5}", moduleId, currentLight, numberSequence[0], numberSequence[1], (numberSequence[0] * numberSequence[1]) + 1250, Mathf.Clamp((numberSequence[0] * numberSequence[1]) + 1250, 0, 9999));
+                        autosolveStore = Mathf.Clamp((numberSequence[0] * numberSequence[1]) + 1250, 0, 9999);
 
                         break;
                     case (2):
 
                         Debug.LogFormat("[Number Sequence #{0}] The currently lit light is number {1}. {2} * {3} + 1500 = {4}, the correct number to submit is {5}", moduleId, currentLight, numberSequence[1], numberSequence[2], (numberSequence[1] * numberSequence[2]) + 1500, Mathf.Clamp((numberSequence[1] * numberSequence[2]) + 1500, 0, 9999));
+                        autosolveStore = Mathf.Clamp((numberSequence[1] * numberSequence[2]) + 1500, 0, 9999);
 
                         break;
                     case (3):
 
                         Debug.LogFormat("[Number Sequence #{0}] The currently lit light is number {1}. {2} * {3} + 1750 = {4}, the correct number to submit is {5}", moduleId, currentLight, numberSequence[2], numberSequence[3], (numberSequence[2] * numberSequence[3]) + 1750, Mathf.Clamp((numberSequence[2] * numberSequence[3]) + 1750, 0, 9999));
+                        autosolveStore = Mathf.Clamp((numberSequence[2] * numberSequence[3]) + 1750, 0, 9999);
 
                         break;
                     case (4):
 
                         Debug.LogFormat("[Number Sequence #{0}] The currently lit light is number {1}. {2} * {3} + 2000 = {4}, the correct number to submit is {5}", moduleId, currentLight, numberSequence[3], numberSequence[0], (numberSequence[3] * numberSequence[0]) + 2000, Mathf.Clamp((numberSequence[3] * numberSequence[0]) + 2000, 0, 9999));
+                        autosolveStore = Mathf.Clamp((numberSequence[3] * numberSequence[0]) + 2000, 0, 9999);
 
                         break;
                 }
                 break;
+        }
+    }
+
+    //Twitch Plays support by eXish
+
+    #pragma warning disable 414
+    private readonly string TwitchHelpMessage = @"!{0} enter/e [Presses the enter button] | !{0} 189 [Inputs 189 using the keypad] | !{0} clear/c [Presses the clear button]";
+    #pragma warning restore 414
+    private float autosolveStore;
+
+    //Twitch Plays command handler
+    IEnumerator ProcessTwitchCommand(string command)
+    {
+        //Handle enter command
+        if (command.EqualsIgnoreCase("enter") || command.EqualsIgnoreCase("e"))
+        {
+            yield return null;
+            buttons[11].OnInteract();
+            yield break;
+        }
+        //Handle clear command
+        if (command.EqualsIgnoreCase("clear") || command.EqualsIgnoreCase("c"))
+        {
+            if (areLightsCycling)
+            {
+                yield return "sendtochaterror You can only clear the display in the submitting phase!";
+                yield break;
+            }
+            yield return null;
+            buttons[10].OnInteract();
+            yield break;
+        }
+        //Make sure keypad input command is the format we expect
+        int temp = -1;
+        if (!int.TryParse(command, out temp))
+        {
+            yield return "sendtochaterror The specified input is invalid!";
+            yield break;
+        }
+        if (temp < 0 || temp > 9999)
+        {
+            yield return "sendtochaterror The specified input is invalid!";
+            yield break;
+        }
+        if (areLightsCycling)
+        {
+            yield return "sendtochaterror You can only input something in the submitting phase!";
+            yield break;
+        }
+        yield return null; //Indicates to the handler that the command was valid
+        for (int i = 0; i < command.Length; i++)
+        {
+            if (command[i] == '0')
+                buttons[9].OnInteract();
+            else
+                buttons[int.Parse(command[i].ToString()) - 1].OnInteract();
+            yield return new WaitForSecondsRealtime(.1f);
+        }
+    }
+
+    //Twitch Plays autosolve handler
+    IEnumerator TwitchHandleForcedSolve()
+    {
+        //While we can't press anything, let other modules solve
+        while (areLightsBlinking) yield return true;
+        //Go to the submitting phase if we are not there already
+        if (areLightsCycling)
+        {
+            buttons[11].OnInteract();
+            yield return new WaitForSecondsRealtime(.1f);
+        }
+        //Determine if we need to clear the screen or not
+        string curr = screenTextRef.text;
+        string ans = autosolveStore.ToString();
+        bool clrPress = false;
+        if (curr.Length > ans.Length)
+        {
+            buttons[10].OnInteract();
+            yield return new WaitForSecondsRealtime(.1f);
+            clrPress = true;
+        }
+        else
+        {
+            for (int i = 0; i < curr.Length; i++)
+            {
+                if (i == ans.Length)
+                    break;
+                if (curr[i] != ans[i])
+                {
+                    buttons[10].OnInteract();
+                    yield return new WaitForSecondsRealtime(.1f);
+                    clrPress = true;
+                    break;
+                }
+            }
+        }
+        int start = 0;
+        if (!clrPress) //If we did not press clear then we may have the beginning of the answer already inputted
+            start = curr.Length;
+        while (!moduleSolved)
+        {
+            for (int j = start; j < ans.Length; j++)
+            {
+                if (ans[j] == '0')
+                {
+                    buttons[9].OnInteract();
+                    yield return new WaitForSecondsRealtime(.1f);
+                }
+                else
+                {
+                    buttons[int.Parse(ans[j].ToString()) - 1].OnInteract();
+                    yield return new WaitForSecondsRealtime(.1f);
+                }
+            }
+            buttons[11].OnInteract();
+            yield return new WaitForSecondsRealtime(.1f);
+            ans = autosolveStore.ToString();
+            start = 0; //Now that we have inputted one stage we know the display will be clear
         }
     }
 }
