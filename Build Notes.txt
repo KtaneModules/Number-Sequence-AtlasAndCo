@@ -19,3 +19,10 @@ Created by: AtlasAndCo
 
 1.4 Build Notes:
 -Fixed an issue with light scaling (Thanks to eXish for pointing it out)
+
+1.5 Build Notes (credit for for this build goes to eXish):
+-Manual is now bundled with the module
+-Added Gamepad/controller support
+-Added Twitch Plays support
+-Fixed light scale code throwing an exception and missing light scale code for the light on the display
+-Keypad press sounds now come directly from the keypad button you pressed
